@@ -6,16 +6,16 @@ export interface ILevel {
 }
 
 export interface IGridCell {
-  id: number;
-  level_id: number;
+  id?: number;
+  level_id?: number;
   grid_index: number;
-  value: number;
+  value: number | null;
   is_selected: boolean;
 }
 
 export interface IMathOption {
-  id: number;
-  level_id: number;
+  id?: number;
+  level_id?: number;
   value: number;
   is_available: boolean;
 }

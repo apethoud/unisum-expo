@@ -9,9 +9,38 @@ import { useLocalSearchParams } from "expo-router";
 import { supabase } from "../../supabaseClient";
 import { IGridCell, ILevelDTO } from "../../models/ILevelDTO";
 
+const rows = [
+  [0, 1, 2, 3, 4],
+  [5, 6, 7, 8, 9],
+  [10, 11, 12, 13, 14],
+  [15, 16, 17, 18, 19],
+  [20, 21, 22, 23, 24]
+]
+
+const columns = [
+  [0, 5, 10, 15, 20],
+  [1, 6, 11, 16, 21],
+  [2, 7, 12, 17, 22],
+  [3, 8, 13, 18, 23],
+  [4, 9, 14, 19, 24]
+]
+
+const createDefaultLevelGrid = () => {
+  let levelGrid = []
+  for (let i = 0; i < 25; i++) {
+    levelGrid.push({
+      grid_index: i,
+      is_selected: false,
+      value: null
+    })
+  }
+  console.log("default levelGrid: ", levelGrid);
+  return levelGrid
+}
+
 export default function LevelView() {
   const [levelConfigData, setLevelConfigData] = useState<ILevelDTO | null>(null)
-  // const [levelGrid, setLevelGrid] = useState
+  const [levelGrid, setLevelGrid] = useState<IGridCell[]>(createDefaultLevelGrid)
   const [gameState, setGameState] = useState(null)
   const [isGameWon, setIsGameWon] = useState(false)
 
@@ -47,7 +76,7 @@ export default function LevelView() {
       const levelData: ILevelDTO = data[0]
       console.log("levelData: ", levelData);
       setLevelConfigData(levelData)
-      // configureGameGrid(levelData.grid_cells)
+      configureGameGrid(levelData.grid_cells)
 
       // data[0].grid_cells = createGameGrid(data[0].grid_cells)
       // setGameState(data[0])
@@ -57,9 +86,10 @@ export default function LevelView() {
 
   useEffect(setupLevel, [])
 
-  // const configureGameGrid = (gridCells: IGridCell[]) => {
-
-  // }
+  const configureGameGrid = (gridCells: IGridCell[]) => {
+    console.log("gridCells: ", gridCells);
+    // [{"grid_index": 8, "id": 1, "is_selected": false, "level_id": 1, "value": 10}, {"grid_index": 6, "id": 2, "is_selected": false, "level_id": 1, "value": 7}]
+  }
 
   // useEffect(() => {
   //   function validateGameBoard() {
@@ -160,21 +190,6 @@ export default function LevelView() {
     // ]
     //
     // Then you can access a specific row or column by index, like rows[2] or columns[4]
-
-    const gridCells = [
-      {
-        is_selected: false,
-        value: null
-      },
-      {
-        is_selected: false,
-        value: null
-      },
-      {
-        is_selected: false,
-        value: null
-      },
-    ]
 
     return true
   }
