@@ -11,14 +11,14 @@ export default function TierList() {
 
   useEffect(() => {
     async function getTiers() {
-      console.log("getting tier list")
+      // console.log("getting tier list")
       
       let { data: tiers, error } = await supabase
         .from('tiers')
         .select('*')
       
-      console.log("%%% tiers: ", tiers);
-      console.log("^^^ error: ", error)
+      // console.log("%%% tiers: ", tiers);
+      // console.log("^^^ error: ", error)
           
       if (error) {
         console.log("Error: ", error)

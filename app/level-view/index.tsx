@@ -39,6 +39,7 @@ const createDefaultLevelGrid = () => {
 }
 
 export default function LevelView() {
+  const [loading, setLoading] = useState(true)
   const [levelConfigData, setLevelConfigData] = useState<ILevelDTO | null>(null)
   const [levelGrid, setLevelGrid] = useState<IGridCell[]>(createDefaultLevelGrid)
   const [gameState, setGameState] = useState(null)
@@ -74,7 +75,7 @@ export default function LevelView() {
       }
 
       const levelData: ILevelDTO = data[0]
-      console.log("levelData: ", levelData);
+      // console.log("levelData: ", levelData);
       setLevelConfigData(levelData)
       configureGameGrid(levelData.grid_cells)
 
@@ -88,7 +89,16 @@ export default function LevelView() {
 
   const configureGameGrid = (gridCells: IGridCell[]) => {
     console.log("gridCells: ", gridCells);
-    // [{"grid_index": 8, "id": 1, "is_selected": false, "level_id": 1, "value": 10}, {"grid_index": 6, "id": 2, "is_selected": false, "level_id": 1, "value": 7}]
+    console.log("levelGrid: ", levelGrid);
+
+    const tempGrid = [...levelGrid];
+
+    for (const cell of gridCells) {
+      tempGrid[cell.grid_index].value = cell.value
+    }
+
+    setLevelGrid(tempGrid);
+    setLoading(false);
   }
 
   // useEffect(() => {
@@ -196,27 +206,28 @@ export default function LevelView() {
 
   return (
     <View className="flex-1 justify-center items-center">
-      {gameState ? (
+      {!loading ? (
         <View>
-          <Button title="log gameState" onPress={() => console.log("gameState: ", gameState)}></Button>
+          {/* <Button title="log gameState" onPress={() => console.log("gameState: ", gameState)}></Button> */}
           {isGameWon ? (
             <View>
               <Text huge>Great job! 🎉</Text>
             </View>
-          ): (
-            <>
-              {/* <Text centered>{`Unisum\n${gameState.pack} ##${gameState.level_number}`}</Text>
-              <TargetNumber number={gameState.target_number} /> */}
-              <GameGrid
-                gameState={gameState}
-                setGameState={setGameState}
-              />
-              {/* <MathOptions
-                gameState={gameState}
-                setGameState={setGameState}
-              /> */}
-              <GameOptions />
-            </>
+          ) : (
+              <>
+                <Text>game grid here</Text>
+                {/* <Text centered>{`Unisum\n${gameState.pack} ##${gameState.level_number}`}</Text>
+                <TargetNumber number={gameState.target_number} /> */}
+                {/* <GameGrid
+                  gameState={gameState}
+                  setGameState={setGameState}
+                /> */}
+                {/* <MathOptions
+                  gameState={gameState}
+                  setGameState={setGameState}
+                /> */}
+                {/* <GameOptions /> */}
+              </>
           )}
         </View>
       ) : (
