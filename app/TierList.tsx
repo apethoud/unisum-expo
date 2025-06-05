@@ -4,26 +4,27 @@ import { supabase } from "../supabaseClient";
 import { useEffect, useState } from "react";
 import { useRouter } from "expo-router";
 import MenuCard from "../reusable-components/MenuCard";
+import { ITier } from "../models/ILevelDTO";
 
 export default function TierList() {
-  const [tiers, setTiers] = useState(null)
+  const [tiers, setTiers] = useState<ITier[] | null>(null)
 
   useEffect(() => {
     async function getTiers() {
       console.log("getting tier list")
+      
       let { data: tiers, error } = await supabase
         .from('tiers')
         .select('*')
       
-      console.log("### tiers: ", tiers);
-      // console.log("")
-      
-      if (!tiers || error) {
+      console.log("%%% tiers: ", tiers);
+      console.log("^^^ error: ", error)
+          
+      if (error) {
         console.log("Error: ", error)
         return;
       }
 
-      console.log("*** tiers: ", tiers)
       setTiers(tiers)
     }
     getTiers()
