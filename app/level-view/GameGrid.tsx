@@ -3,7 +3,9 @@ import Text from "../../reusable-components/Text";
 import ChevronRight from "../../assets/icons/ChevronRight";
 import ChevronUp from "../../assets/icons/ChevronUp";
 import { IGridCell } from "../../models/ILevelDTO";
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
+
+type Dimension = "row" | "column";
 
 const rows = [
   [0, 1, 2, 3, 4],
@@ -21,7 +23,13 @@ const columns = [
   [4, 9, 14, 19, 24]
 ]
 
-export default function GameGrid({ levelGrid }: { levelGrid: IGridCell[] }) {
+export default function GameGrid({
+  levelGrid,
+  setLevelGrid
+}: {
+  levelGrid: IGridCell[],
+  setLevelGrid: Dispatch<SetStateAction<IGridCell[]>>
+}) {
   const [gridRows, setGridRows] = useState<IGridCell[][] | null>(null)
 
   const updateGrid = (levelGrid: IGridCell[]) => {
@@ -37,29 +45,29 @@ export default function GameGrid({ levelGrid }: { levelGrid: IGridCell[] }) {
   }
 
   useEffect(() => updateGrid(levelGrid), [levelGrid])
-  // const selectCells = (dimension, index) => {
-  //   let tempGameState = { ...gameState }
-  //   // First, clear all selected cells.
-  //   for (let row of tempGameState.grid_cells) {
-  //     for (let cell of row) {
-  //       cell.selected = false
-  //     }
-  //   }
 
-  //   if (dimension === "row") {
-  //     for (let cell of tempGameState.grid_cells[index]) {
-  //       cell.selected = !cell.selected
-  //     }
-  //   } else if (dimension === "column") {
-  //     for (let row of tempGameState.grid_cells) {
-  //       row[index].selected = !row[index].selected
-  //     }
-  //   } else {
-  //     console.log("selectCells error thrown")
-  //   }
+  const selectCells = (dimension: Dimension, index: number) => {
+    let tempLevelGrid = [...levelGrid];
 
-  //   setGameState(tempGameState)
-  // }
+    // First, clear all selected cells.
+    for (let cell of tempLevelGrid) {
+      cell.is_selected = false
+    }
+
+    if (dimension === "row") {
+      for (const gridCellIndex of rows[index]) {
+        tempLevelGrid[gridCellIndex].is_selected = true;
+      }
+    } else if (dimension === "column") {
+      for (const gridCellIndex of columns[index]) {
+        tempLevelGrid[gridCellIndex].is_selected = true;
+      }
+    } else {
+      console.log("Error selecting grid cells")
+    }
+
+    setLevelGrid(tempLevelGrid)
+  }
 
   const Cell = ({ value, isSelected }: { value: number | null, isSelected: boolean }) => (
     <View className={`w-12 h-12 flex justify-center items-center border 
@@ -84,44 +92,44 @@ export default function GameGrid({ levelGrid }: { levelGrid: IGridCell[] }) {
     </View>
   )
 
-  // const GridButton = ({ dimension, index }: { dimension: "row" | "column", index: number }) => (
-  //   <Pressable
-  //     onPress={() => selectCells(dimension, index)}>
-  //     <View className="w-12 h-12 flex justify-center items-center p-1">
-  //       <View className="w-full h-full bg-white border rounded-lg border-slate-400 flex justify-center items-center shadow-sm shadow-slate-300">
-  //         {dimension === "row" ? (
-  //           <ChevronRight />
-  //         ) : (
-  //           <ChevronUp />
-  //         ) }
-  //       </View>
-  //     </View>
-  //   </Pressable>
-  // )
+  const GridButton = ({ dimension, index }: { dimension: Dimension, index: number }) => (
+    <Pressable
+      onPress={() => selectCells(dimension, index)}>
+      <View className="w-12 h-12 flex justify-center items-center p-1">
+        <View className="w-full h-full bg-white border rounded-lg border-slate-400 flex justify-center items-center shadow-sm shadow-slate-300">
+          {dimension === "row" ? (
+            <ChevronRight />
+          ) : (
+            <ChevronUp />
+          ) }
+        </View>
+      </View>
+    </Pressable>
+  )
 
-  // const GridRowButtons = () => (
-  //   <View className="flex-col pr-2">
-  //     {gameState.grid_cells.map((row, index) => (
-  //       <GridButton dimension="row" key={index} index={index} />
-  //     ))}
-  //   </View>
-  // )
+  const GridRowButtons = () => (
+    <View className="flex-col pr-2">
+      {gridRows && gridRows.map((row, index) => (
+        <GridButton dimension="row" key={index} index={index} />
+      ))}
+    </View>
+  )
 
-  // const GridColumnButtons = () => (
-  //   <View className="flex-row justify-end pt-2">
-  //     {gameState.grid_cells[0].map((column, index) => (
-  //       <GridButton dimension="column" key={index} index={index} />
-  //     ))}
-  //   </View>
-  // )
+  const GridColumnButtons = () => (
+    <View className="flex-row justify-end pt-2">
+      {gridRows && gridRows[0].map((column, index) => (
+        <GridButton dimension="column" key={index} index={index} />
+      ))}
+    </View>
+  )
 
   return (
     <View>
       <View className="flex-row">
-        {/* <GridRowButtons /> */}
+        <GridRowButtons />
         <Grid />
       </View>
-      {/* <GridColumnButtons /> */}
+      <GridColumnButtons />
     </View>
   )
 }

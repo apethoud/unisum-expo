@@ -203,6 +203,7 @@ export default function LevelView() {
                 <TargetNumber number={gameState.target_number} /> */}
                 <GameGrid
                   levelGrid={levelGrid}
+                  setLevelGrid={setLevelGrid}
                 />
                 {/* <MathOptions
                   gameState={gameState}
