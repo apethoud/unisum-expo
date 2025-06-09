@@ -25,12 +25,10 @@ const columns = [
 
 export default function GameGrid({
   levelGrid,
-  setLevelGrid,
   selectedCellIndexes,
   setSelectedCellIndexes
 }: {
   levelGrid: IGridCell[],
-  setLevelGrid: Dispatch<SetStateAction<IGridCell[]>>
   selectedCellIndexes: number[],
   setSelectedCellIndexes: Dispatch<SetStateAction<number[]>>
 }) {
