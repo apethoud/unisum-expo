@@ -216,6 +216,8 @@ export default function LevelView() {
                   setMathOptions={setMathOptions}
                   levelGrid={levelGrid}
                   setLevelGrid={setLevelGrid}
+                  selectedCellIndexes={selectedCellIndexes}
+                  setSelectedCellIndexes={setSelectedCellIndexes}
                 />
                 {/* <GameOptions /> */}
               </View>

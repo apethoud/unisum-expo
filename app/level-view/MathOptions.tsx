@@ -7,24 +7,44 @@ export default function MathOptions({
   mathOptions,
   setMathOptions,
   levelGrid,
-  setLevelGrid
+  setLevelGrid,
+  selectedCellIndexes,
+  setSelectedCellIndexes
 }: {
     mathOptions: IMathOption[],
     setMathOptions: Dispatch<SetStateAction<IMathOption[]>>,
     levelGrid: IGridCell[],
     setLevelGrid: Dispatch<SetStateAction<IGridCell[]>>
+    selectedCellIndexes: number[],
+    setSelectedCellIndexes: Dispatch<SetStateAction<number[]>>
 }) {
   console.log("mathOptions: ", mathOptions)
   const applyMathOperation = (option: IMathOption, mathOptions: IMathOption[]) => {
-    // let tempLevelGrid = [...levelGrid]
+    if (!selectedCellIndexes.length) {
+      return;
+    }
 
-    // for (const cell of tempLevelGrid) {
-    //   if (cell.is_selected && cell.value) {
-    //     cell.value = cell.value + option.value
-    //   }
-    // }
+    let tempLevelGrid = [...levelGrid]
 
-    // ------------------------------------------
+    for (const selectedCellIndex of selectedCellIndexes) {
+      if (tempLevelGrid[selectedCellIndex].value) {
+        tempLevelGrid[selectedCellIndex].value = tempLevelGrid[selectedCellIndex].value + option.value
+      }
+    }
+
+    // update level grid
+    setLevelGrid(tempLevelGrid)
+    // de-select all cells
+    setSelectedCellIndexes([])
+    // disable used math option
+    let tempMathOptions = [...mathOptions]
+    tempMathOptions = tempMathOptions.map(opt => {
+      if (opt.id === option.id) {
+        opt.is_available = false
+      }
+      return opt
+    })
+
 
     // let tempGameState = { ...gameState }
     // let isSomethingSelected = false
