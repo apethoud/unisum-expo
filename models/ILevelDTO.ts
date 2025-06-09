@@ -14,7 +14,7 @@ export interface IGridCell {
 }
 
 export interface IMathOption {
-  id?: number;
+  id: number;
   level_id?: number;
   value: number;
   is_available: boolean;

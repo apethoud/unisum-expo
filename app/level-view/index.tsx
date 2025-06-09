@@ -7,7 +7,7 @@ import MathOptions from "./MathOptions";
 import GameOptions from "./GameOptions";
 import { useLocalSearchParams } from "expo-router";
 import { supabase } from "../../supabaseClient";
-import { IGridCell, ILevelDTO } from "../../models/ILevelDTO";
+import { IGridCell, ILevelDTO, IMathOption } from "../../models/ILevelDTO";
 
 const createDefaultLevelGrid = () => {
   let levelGrid = []
@@ -24,8 +24,9 @@ const createDefaultLevelGrid = () => {
 
 export default function LevelView() {
   const [loading, setLoading] = useState(true)
-  const [levelConfigData, setLevelConfigData] = useState<ILevelDTO | null>(null)
+  // const [levelConfigData, setLevelConfigData] = useState<ILevelDTO | null>(null)
   const [levelGrid, setLevelGrid] = useState<IGridCell[]>(createDefaultLevelGrid)
+  const [mathOptions, setMathOptions] = useState<IMathOption[]>([])
   const [gameState, setGameState] = useState(null)
   const [isGameWon, setIsGameWon] = useState(false)
 
@@ -60,8 +61,9 @@ export default function LevelView() {
 
       const levelData: ILevelDTO = data[0]
       // console.log("levelData: ", levelData);
-      setLevelConfigData(levelData)
+      // setLevelConfigData(levelData)
       configureGameGrid(levelData.grid_cells)
+      setMathOptions(levelData.math_options)
 
       // data[0].grid_cells = createGameGrid(data[0].grid_cells)
       // setGameState(data[0])
@@ -198,19 +200,19 @@ export default function LevelView() {
               <Text huge>Great job! 🎉</Text>
             </View>
           ) : (
-              <>
+              <View className="items-center">
                 {/* <Text centered>{`Unisum\n${gameState.pack} ##${gameState.level_number}`}</Text>
                 <TargetNumber number={gameState.target_number} /> */}
                 <GameGrid
                   levelGrid={levelGrid}
                   setLevelGrid={setLevelGrid}
                 />
-                {/* <MathOptions
-                  gameState={gameState}
-                  setGameState={setGameState}
-                /> */}
+                <MathOptions
+                  mathOptions={mathOptions}
+                  setMathOptions={setMathOptions}
+                />
                 {/* <GameOptions /> */}
-              </>
+              </View>
           )}
         </View>
       ) : (
