@@ -52,27 +52,6 @@ export default function GameGrid({
 
   const selectCells = (dimension: Dimension, index: number) => {
     setSelectedCellIndexes(dimension === "row" ? rows[index] : columns[index])
-
-    // let tempLevelGrid = [...levelGrid];
-
-    // // First, clear all selected cells.
-    // for (let cell of tempLevelGrid) {
-    //   cell.is_selected = false
-    // }
-
-    // if (dimension === "row") {
-    //   for (const gridCellIndex of rows[index]) {
-    //     tempLevelGrid[gridCellIndex].is_selected = true;
-    //   }
-    // } else if (dimension === "column") {
-    //   for (const gridCellIndex of columns[index]) {
-    //     tempLevelGrid[gridCellIndex].is_selected = true;
-    //   }
-    // } else {
-    //   console.log("Error selecting grid cells")
-    // }
-
-    // setLevelGrid(tempLevelGrid)
   }
 
   const Cell = ({ value, isSelected }: { value: number | null, isSelected: boolean }) => (
