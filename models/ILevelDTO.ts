@@ -10,7 +10,6 @@ export interface IGridCell {
   level_id?: number;
   grid_index: number;
   value: number | null;
-  is_selected: boolean;
 }
 
 export interface IMathOption {

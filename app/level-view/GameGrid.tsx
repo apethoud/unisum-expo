@@ -25,10 +25,14 @@ const columns = [
 
 export default function GameGrid({
   levelGrid,
-  setLevelGrid
+  setLevelGrid,
+  selectedCellIndexes,
+  setSelectedCellIndexes
 }: {
   levelGrid: IGridCell[],
   setLevelGrid: Dispatch<SetStateAction<IGridCell[]>>
+  selectedCellIndexes: number[],
+  setSelectedCellIndexes: Dispatch<SetStateAction<number[]>>
 }) {
   const [gridRows, setGridRows] = useState<IGridCell[][] | null>(null)
 
@@ -47,26 +51,28 @@ export default function GameGrid({
   useEffect(() => updateGrid(levelGrid), [levelGrid])
 
   const selectCells = (dimension: Dimension, index: number) => {
-    let tempLevelGrid = [...levelGrid];
+    setSelectedCellIndexes(dimension === "row" ? rows[index] : columns[index])
 
-    // First, clear all selected cells.
-    for (let cell of tempLevelGrid) {
-      cell.is_selected = false
-    }
+    // let tempLevelGrid = [...levelGrid];
 
-    if (dimension === "row") {
-      for (const gridCellIndex of rows[index]) {
-        tempLevelGrid[gridCellIndex].is_selected = true;
-      }
-    } else if (dimension === "column") {
-      for (const gridCellIndex of columns[index]) {
-        tempLevelGrid[gridCellIndex].is_selected = true;
-      }
-    } else {
-      console.log("Error selecting grid cells")
-    }
+    // // First, clear all selected cells.
+    // for (let cell of tempLevelGrid) {
+    //   cell.is_selected = false
+    // }
 
-    setLevelGrid(tempLevelGrid)
+    // if (dimension === "row") {
+    //   for (const gridCellIndex of rows[index]) {
+    //     tempLevelGrid[gridCellIndex].is_selected = true;
+    //   }
+    // } else if (dimension === "column") {
+    //   for (const gridCellIndex of columns[index]) {
+    //     tempLevelGrid[gridCellIndex].is_selected = true;
+    //   }
+    // } else {
+    //   console.log("Error selecting grid cells")
+    // }
+
+    // setLevelGrid(tempLevelGrid)
   }
 
   const Cell = ({ value, isSelected }: { value: number | null, isSelected: boolean }) => (
@@ -85,7 +91,7 @@ export default function GameGrid({
       {gridRows && gridRows.map((row, rowIndex) => (
         <View className="flex-row" key={rowIndex}>
           {row.map((cell, cellIndex) => (
-            <Cell key={cellIndex} value={cell.value} isSelected={cell.is_selected} />
+            <Cell key={cellIndex} value={cell.value} isSelected={selectedCellIndexes.includes(cell.grid_index)} />
           ))}
         </View>
       ))}

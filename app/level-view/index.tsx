@@ -26,11 +26,14 @@ export default function LevelView() {
   const [loading, setLoading] = useState(true)
   // const [levelConfigData, setLevelConfigData] = useState<ILevelDTO | null>(null)
   const [levelGrid, setLevelGrid] = useState<IGridCell[]>(createDefaultLevelGrid)
+  const [selectedCellIndexes, setSelectedCellIndexes] = useState<number[]>([])
   const [mathOptions, setMathOptions] = useState<IMathOption[]>([])
   const [gameState, setGameState] = useState(null)
   const [isGameWon, setIsGameWon] = useState(false)
 
   const { levelNumber } = useLocalSearchParams()
+
+  console.log("selectedCellIndexes: ", selectedCellIndexes)
 
   const setupLevel = () => {
     async function getLevel() {
@@ -42,8 +45,7 @@ export default function LevelView() {
             level_id,
             id,
             grid_index,
-            value,
-            is_selected
+            value
           ),
           math_options (
             level_id,
@@ -206,10 +208,14 @@ export default function LevelView() {
                 <GameGrid
                   levelGrid={levelGrid}
                   setLevelGrid={setLevelGrid}
+                  selectedCellIndexes={selectedCellIndexes}
+                  setSelectedCellIndexes={setSelectedCellIndexes}
                 />
                 <MathOptions
                   mathOptions={mathOptions}
                   setMathOptions={setMathOptions}
+                  levelGrid={levelGrid}
+                  setLevelGrid={setLevelGrid}
                 />
                 {/* <GameOptions /> */}
               </View>
