@@ -52,6 +52,20 @@ export default function GameGrid({
     setSelectedCellIndexes(dimension === "row" ? rows[index] : columns[index])
   }
 
+  const doesRowOrColumnHaveValues = (dimension: Dimension, index: number) => {
+    const cellIndexesToSearch = dimension === "row" ? rows[index] : columns[index]
+    let rowOrColumnHasValues = false;
+
+    for (const cellIndex of cellIndexesToSearch) {
+      if (levelGrid[cellIndex].value) {
+        rowOrColumnHasValues = true;
+        break;
+      }
+    }
+
+    return rowOrColumnHasValues;
+  }
+
   const Cell = ({ value, isSelected }: { value: number | null, isSelected: boolean }) => (
     <View className={`w-12 h-12 flex justify-center items-center border 
       ${isSelected
@@ -77,7 +91,9 @@ export default function GameGrid({
 
   const GridButton = ({ dimension, index }: { dimension: Dimension, index: number }) => (
     <Pressable
-      onPress={() => selectCells(dimension, index)}>
+      onPress={() => selectCells(dimension, index)}
+      disabled={!doesRowOrColumnHaveValues(dimension, index)}
+    >
       <View className="w-12 h-12 flex justify-center items-center p-1">
         <View className="w-full h-full bg-white border rounded-lg border-slate-400 flex justify-center items-center shadow-sm shadow-slate-300">
           {dimension === "row" ? (

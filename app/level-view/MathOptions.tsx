@@ -18,25 +18,24 @@ export default function MathOptions({
     selectedCellIndexes: number[],
     setSelectedCellIndexes: Dispatch<SetStateAction<number[]>>
 }) {
-  console.log("mathOptions: ", mathOptions)
   const applyMathOperation = (option: IMathOption, mathOptions: IMathOption[]) => {
-    if (!selectedCellIndexes.length) {
-      return;
-    }
-
     let tempLevelGrid = [...levelGrid]
-
     for (const selectedCellIndex of selectedCellIndexes) {
       if (tempLevelGrid[selectedCellIndex].value) {
         tempLevelGrid[selectedCellIndex].value = tempLevelGrid[selectedCellIndex].value + option.value
       }
     }
 
-    // update level grid
     setLevelGrid(tempLevelGrid)
-    // de-select all cells
+    deselectAllCells()
+    disableUsedMathOption(option, mathOptions, setMathOptions)
+  }
+
+  const deselectAllCells = () => {
     setSelectedCellIndexes([])
-    // disable used math option
+  }
+
+  const disableUsedMathOption = (option: IMathOption, mathOptions: IMathOption[], setMathOptions: Dispatch<SetStateAction<IMathOption[]>>) => {
     let tempMathOptions = [...mathOptions]
     tempMathOptions = tempMathOptions.map(opt => {
       if (opt.id === option.id) {
@@ -44,36 +43,8 @@ export default function MathOptions({
       }
       return opt
     })
-
-
-    // let tempGameState = { ...gameState }
-    // let isSomethingSelected = false
-
-    // for (let row of tempGameState.gridLayout) {
-    //   for (let cell of row) {
-    //     if (cell.selected) {
-    //       if (cell.value !== null) {
-    //         cell.value = cell.value + operation
-    //       }
-    //       isSomethingSelected = true
-    //       cell.selected = false
-    //     }
-    //   }
-    // }
-
-    // // If nothing was selected, return before disabling the math option.
-    // if (!isSomethingSelected) {
-    //   return setGameState(tempGameState)
-    // }
-
-    // for (let mathOption of tempGameState.mathOptions) {
-    //   if (mathOption.id === optionId) {
-    //     mathOption.available = false
-    //   }
-    // }
-
-    // setGameState(tempGameState)
-  }
+    setMathOptions(tempMathOptions)
+  } 
 
   const Option = ({ option }: { option: IMathOption }) => (
     <Pressable
