@@ -68,9 +68,6 @@ export default function LevelView() {
   useEffect(setupLevel, [])
 
   const configureGameGrid = (gridCells: IGridCell[]) => {
-    console.log("gridCells: ", gridCells);
-    console.log("levelGrid: ", levelGrid);
-
     const tempGrid = [...levelGrid];
 
     for (const cell of gridCells) {
@@ -81,19 +78,19 @@ export default function LevelView() {
     setLoading(false);
   }
 
-  // useEffect(() => {
-  //   function validateGameBoard() {
-  //     for (let row of gameState.gridLayout) {
-  //       for (let cell of row) {
-  //         if (cell.value !== null && cell.value !== gameState.targetNumber) {
-  //           return
-  //         }
-  //       }
-  //     }
-  //     return setTimeout(() => setIsGameWon(true), 1000)
-  //   }
-  //   validateGameBoard()
-  // }, [gameState])
+  useEffect(() => {
+    const validateGameBoard = (levelGrid: IGridCell[]) => {
+      let isValid = true;
+      for (const cell of levelGrid) {
+        if (cell.value && cell.value !== targetNumber) {
+          isValid = false;
+          break;
+        }
+      }
+      setIsGameWon(isValid);
+    }
+    validateGameBoard(levelGrid)
+  }, [levelGrid])
 
   return (
     <View className="flex-1 justify-center items-center">
