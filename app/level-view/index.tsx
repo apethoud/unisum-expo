@@ -25,6 +25,7 @@ const createDefaultLevelGrid = () => {
 export default function LevelView() {
   const [loading, setLoading] = useState(true)
   // const [levelConfigData, setLevelConfigData] = useState<ILevelDTO | null>(null)
+  const [targetNumber, setTargetNumber] = useState<number | null>(null)
   const [levelGrid, setLevelGrid] = useState<IGridCell[]>(createDefaultLevelGrid)
   const [selectedCellIndexes, setSelectedCellIndexes] = useState<number[]>([])
   const [mathOptions, setMathOptions] = useState<IMathOption[]>([])
@@ -62,8 +63,8 @@ export default function LevelView() {
       }
 
       const levelData: ILevelDTO = data[0]
-      // console.log("levelData: ", levelData);
       // setLevelConfigData(levelData)
+      setTargetNumber(levelData.target_number)
       configureGameGrid(levelData.grid_cells)
       setMathOptions(levelData.math_options)
 
@@ -203,8 +204,9 @@ export default function LevelView() {
             </View>
           ) : (
               <View className="items-center">
-                {/* <Text centered>{`Unisum\n${gameState.pack} ##${gameState.level_number}`}</Text>
-                <TargetNumber number={gameState.target_number} /> */}
+                {targetNumber && (
+                  <TargetNumber number={targetNumber} />
+                )}
                 <GameGrid
                   levelGrid={levelGrid}
                   selectedCellIndexes={selectedCellIndexes}
