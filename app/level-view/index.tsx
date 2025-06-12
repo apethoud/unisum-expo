@@ -207,7 +207,6 @@ export default function LevelView() {
                 <TargetNumber number={gameState.target_number} /> */}
                 <GameGrid
                   levelGrid={levelGrid}
-                  setLevelGrid={setLevelGrid}
                   selectedCellIndexes={selectedCellIndexes}
                   setSelectedCellIndexes={setSelectedCellIndexes}
                 />
