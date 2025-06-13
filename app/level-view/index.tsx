@@ -8,6 +8,7 @@ import GameOptions from "./GameOptions";
 import { useLocalSearchParams } from "expo-router";
 import { supabase } from "../../supabaseClient";
 import { IGridCell, ILevelDTO, IMathOption } from "../../models/ILevelDTO";
+import { ILevelState } from "../../models/ILevelState";
 
 const createDefaultLevelGrid = () => {
   let levelGrid = []
@@ -28,6 +29,7 @@ export default function LevelView() {
   const [selectedCellIndexes, setSelectedCellIndexes] = useState<number[]>([])
   const [mathOptions, setMathOptions] = useState<IMathOption[]>([])
   const [isGameWon, setIsGameWon] = useState(false)
+  const [levelStateHistory, setLevelStateHistory] = useState<ILevelState[]>([]);
 
   const { levelNumber } = useLocalSearchParams()
 
@@ -58,9 +60,15 @@ export default function LevelView() {
       }
 
       const levelData: ILevelDTO = data[0]
+
+      const grid = configureGameGrid(levelData.grid_cells)
+      setLevelGrid(grid)
       setTargetNumber(levelData.target_number)
-      configureGameGrid(levelData.grid_cells)
       setMathOptions(levelData.math_options)
+      // Set initial level state history event
+      setLevelStateHistory([{ levelGrid: [...grid], mathOptions: [...levelData.math_options] }])
+      setLoading(false)
+      console.log("initial levelStateHistory is: ", [{ levelGrid: [...grid], mathOptions: [...levelData.math_options] }][0].levelGrid[8])
     }
     getLevel()
   }
@@ -74,8 +82,7 @@ export default function LevelView() {
       tempGrid[cell.grid_index].value = cell.value
     }
 
-    setLevelGrid(tempGrid);
-    setLoading(false);
+    return tempGrid
   }
 
   useEffect(() => {
@@ -117,8 +124,17 @@ export default function LevelView() {
                   setLevelGrid={setLevelGrid}
                   selectedCellIndexes={selectedCellIndexes}
                   setSelectedCellIndexes={setSelectedCellIndexes}
+                  levelStateHistory={levelStateHistory}
+                  setLevelStateHistory={setLevelStateHistory}
                 />
-                {/* <GameOptions /> */}
+                <GameOptions
+                  levelGrid={levelGrid}
+                  setLevelGrid={setLevelGrid}
+                  mathOptions={mathOptions}
+                  setMathOptions={setMathOptions}
+                  levelStateHistory={levelStateHistory}
+                  setLevelStateHistory={setLevelStateHistory}
+                />
               </View>
           )}
         </View>

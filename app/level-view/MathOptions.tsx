@@ -2,6 +2,8 @@ import { Pressable, View } from "react-native";
 import Text from "../../reusable-components/Text";
 import { IGridCell, IMathOption } from "../../models/ILevelDTO";
 import { Dispatch, SetStateAction } from "react";
+import { ILevelState } from "../../models/ILevelState";
+import _ from "lodash"
 
 export default function MathOptions({
   mathOptions,
@@ -9,41 +11,54 @@ export default function MathOptions({
   levelGrid,
   setLevelGrid,
   selectedCellIndexes,
-  setSelectedCellIndexes
+  setSelectedCellIndexes,
+  levelStateHistory,
+  setLevelStateHistory
 }: {
     mathOptions: IMathOption[],
     setMathOptions: Dispatch<SetStateAction<IMathOption[]>>,
     levelGrid: IGridCell[],
     setLevelGrid: Dispatch<SetStateAction<IGridCell[]>>
     selectedCellIndexes: number[],
-    setSelectedCellIndexes: Dispatch<SetStateAction<number[]>>
+    setSelectedCellIndexes: Dispatch<SetStateAction<number[]>>,
+    levelStateHistory: ILevelState[],
+    setLevelStateHistory: Dispatch<SetStateAction<ILevelState[]>>
 }) {
   const applyMathOperation = (option: IMathOption, mathOptions: IMathOption[]) => {
-    let tempLevelGrid = [...levelGrid]
+    let tempLevelGrid = _.cloneDeep(levelGrid)
     for (const selectedCellIndex of selectedCellIndexes) {
       if (tempLevelGrid[selectedCellIndex].value) {
         tempLevelGrid[selectedCellIndex].value = tempLevelGrid[selectedCellIndex].value + option.value
       }
     }
-
     setLevelGrid(tempLevelGrid)
+
+    const updatedAvailableMathOptions = updateAvailableMathOptions(option, mathOptions, setMathOptions)
+    setMathOptions(updatedAvailableMathOptions)
+
+    const newLevelStateHistoryEvent = {
+      levelGrid: tempLevelGrid,
+      mathOptions: updatedAvailableMathOptions
+    }
+
+    setLevelStateHistory([...levelStateHistory, newLevelStateHistoryEvent])
+
     deselectAllCells()
-    disableUsedMathOption(option, mathOptions, setMathOptions)
   }
 
   const deselectAllCells = () => {
     setSelectedCellIndexes([])
   }
 
-  const disableUsedMathOption = (option: IMathOption, mathOptions: IMathOption[], setMathOptions: Dispatch<SetStateAction<IMathOption[]>>) => {
-    let tempMathOptions = [...mathOptions]
+  const updateAvailableMathOptions = (option: IMathOption, mathOptions: IMathOption[], setMathOptions: Dispatch<SetStateAction<IMathOption[]>>) => {
+    let tempMathOptions = _.cloneDeep(mathOptions)
     tempMathOptions = tempMathOptions.map(opt => {
       if (opt.id === option.id) {
         opt.is_available = false
       }
       return opt
     })
-    setMathOptions(tempMathOptions)
+    return tempMathOptions
   } 
 
   const Option = ({ option }: { option: IMathOption }) => (
