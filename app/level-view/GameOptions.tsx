@@ -20,20 +20,12 @@ export default function GameOptions({
   setLevelStateHistory: Dispatch<SetStateAction<ILevelState[]>>,
   }) {
   const undoPlayerMoves = (numberOfMoves: number) => {
-    console.log("undoPlayerMove")
-    // remove the last level state from history
     const tempLevelStateHistory = [...levelStateHistory]
-    console.log("tempLevelStateHistory.length is: ", tempLevelStateHistory.length)
-    // tempLevelStateHistory.pop()
     const updatedLevelStateHistory = tempLevelStateHistory.slice(0, tempLevelStateHistory.length - numberOfMoves)
-    console.log("updatedLevelStateHistory.length is: ", updatedLevelStateHistory.length)
-    // save the updated history
     setLevelStateHistory(updatedLevelStateHistory)
-    // update the current level grid with the new last level state
+
     const newLevelState = updatedLevelStateHistory[updatedLevelStateHistory.length - 1]
-    console.log("newLevelState: ", newLevelState)
     setLevelGrid(newLevelState.levelGrid)
-    // update the current math options with the new last level state
     setMathOptions(newLevelState.mathOptions)
   }
 
